@@ -6,7 +6,7 @@
 
     <groupId>pl.wsb</groupId>
     <artifactId>CapWSB-FitnessTracker</artifactId>
-    <version>1.1.0-33219-103525-SNAPSHOT</version>
+    <version>1.1.0-103525-33219-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
