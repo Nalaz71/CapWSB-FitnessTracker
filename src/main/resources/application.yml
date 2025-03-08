@@ -10,4 +10,5 @@ spring:
   profiles:
     active: loadInitialData
     server:
-      active: 8080
+      active: 9090
+
