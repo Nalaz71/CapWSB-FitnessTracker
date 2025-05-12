@@ -28,7 +28,7 @@ public class User {
     private String lastName;
 
     @Column(name = "birthdate", nullable = false)
-    private LocalDate birthdate;
+    private LocalDate birthDate;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -36,12 +36,12 @@ public class User {
     public User(
             final String firstName,
             final String lastName,
-            final LocalDate birthdate,
+            final LocalDate birthDate,
             final String email) {
 
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthdate = birthdate;
+        this.birthDate = birthDate;
         this.email = email;
     }
 
