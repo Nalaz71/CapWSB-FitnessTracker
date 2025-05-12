@@ -85,7 +85,7 @@ class UserController {
     }
 
     @PostMapping(value = "/matchingUsers", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UserDto> findMatchingUsers(@Valid @RequestBody UserSearch userSearch) {
+    public List<UserDto> findMatchingUser(@Valid @RequestBody UserSearch userSearch) {
         return userService.findMatchingUsers(userSearch)
                 .stream()
                 .map(userMapper::toDtoJustEmailAndId)

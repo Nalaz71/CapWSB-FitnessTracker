@@ -91,10 +91,10 @@ class UserServiceImpl implements UserService, UserProvider {
     @Override
     public List<User> findMatchingUsers(UserSearch search) {
         validateSearch(search);
-        log.info("Getting matching users by search: {}", search);
-        return userRepository.findMatchingUsers(search);
-    }
 
+        log.info("Getting matching users by search: {}", search);
+        return userRepository.findMatchingUser(search);
+    }
     @Override
     public List<User> findMatchingUsersByPartialEmail(String partialEmail) throws IllegalArgumentException {
         validatePartialEmail(partialEmail);
@@ -148,19 +148,9 @@ class UserServiceImpl implements UserService, UserProvider {
             throw new IllegalArgumentException("Invalid email format: " + search.getEmail());
         }
 
-        LocalDate birthDate = null;
-        if (search.getBirthDate() != null && !search.getBirthDate().isBlank()) {
-            try {
-                birthDate = LocalDate.parse(search.getBirthDate());
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Invalid date format: " + search.getBirthDate());
-            }
-        }
+        if (search.getBirthDate() != null && search.getBirthDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Invalid Birthdate.");
 
-        if (search.getBirthDate() != null) {
-            if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
-                throw new IllegalArgumentException("Birthdate cannot be in the future: " + birthDate);
-            }
         }
     }
 
