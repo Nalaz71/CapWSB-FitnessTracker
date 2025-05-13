@@ -46,6 +46,7 @@ interface UserRepository extends JpaRepository<User, Long> {
 //                                 @Param("lastName") String lastName,
 //                                 @Param("birthDate") LocalDate birthDate,
 //                                 @Param("email") String email);
+
     List<User> findAllByEmailContainingIgnoreCase(String partialEmail);
     List<User> findByBirthDateBefore(LocalDate date);
 }

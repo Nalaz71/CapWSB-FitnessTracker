@@ -8,7 +8,6 @@ import pl.wsb.fitnesstracker.user.exception.UserAlreadyExistsException;
 import pl.wsb.fitnesstracker.user.exception.UserNotFoundException;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -29,13 +28,16 @@ class UserServiceImpl implements UserService, UserProvider {
     @Override
     public User createUser(final User user) throws UserAlreadyExistsException, IllegalArgumentException {
         validateNewUser(user);
-        log.info("Creating User {}", user);
+
         if (user.getId() != null) {
+            log.warn("Attempt to create user with existing DB ID: {}", user.getId());
             throw new IllegalArgumentException("User has already DB ID, update is not permitted!");
         }
         if (userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User with email already exists!");
+            log.warn("User with email {} already exists!", user.getEmail());
+            throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists!");
         }
+        log.info("Creating User {}", user);
         return userRepository.save(user);
     }
 
@@ -91,7 +93,6 @@ class UserServiceImpl implements UserService, UserProvider {
     @Override
     public List<User> findMatchingUsers(UserSearch search) {
         validateSearch(search);
-
         log.info("Getting matching users by search: {}", search);
         return userRepository.findMatchingUser(search);
     }

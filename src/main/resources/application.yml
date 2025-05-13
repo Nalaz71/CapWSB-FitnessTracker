@@ -9,6 +9,6 @@ spring:
       enabled: true
   profiles:
     active: loadInitialData
-    server:
-      active: 9090
+server:
+  port: 9090
 

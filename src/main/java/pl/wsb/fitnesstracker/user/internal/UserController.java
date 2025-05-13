@@ -76,7 +76,7 @@ class UserController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(value = "/olderThan", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/older/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserDto> getUsersOlderThan(@PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return userService.findUsersOlderThan(date)
                 .stream()
@@ -97,11 +97,4 @@ class UserController {
     public User updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
         return userService.updateUser(id, userMapper.toEntity(userDto));
     }
-
-
-    }
-
-
-
-
 }

@@ -88,7 +88,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                 .andExpect(jsonPath("$.lastName").value(user1.getLastName()))
                 .andExpect(jsonPath("$.birthDate").value(ISO_DATE.format(user1.getBirthDate())))
                 .andExpect(jsonPath("$.email").value(user1.getEmail()));
-
     }
 
     @Test
@@ -106,7 +105,7 @@ class UserApiIntegrationTest extends IntegrationTestBase {
     @Test
     void shouldReturnAllUsersOlderThan_whenGettingAllUsersOlderThan() throws Exception {
         User user1 = existingUser(generateUserWithDate(LocalDate.of(2000, 8, 11)));
-        existingUser(generateUserWithDate(LocalDate.of(2024, 8, 11)));
+        User user2 = existingUser(generateUserWithDate(LocalDate.of(2024, 8, 11)));
 
 
         mockMvc.perform(get("/v1/users/older/{time}", LocalDate.of(2024, 8, 10)).contentType(MediaType.APPLICATION_JSON))
@@ -116,7 +115,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                 .andExpect(jsonPath("$[0].firstName").value(user1.getFirstName()))
                 .andExpect(jsonPath("$[0].lastName").value(user1.getLastName()))
                 .andExpect(jsonPath("$[0].birthDate").value(ISO_DATE.format(user1.getBirthDate())))
-
                 .andExpect(jsonPath("$[1]").doesNotExist());
     }
 
@@ -126,13 +124,12 @@ class UserApiIntegrationTest extends IntegrationTestBase {
 
 
         mockMvc.perform(delete("/v1/users/{userId}", user1.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isNoContent());
 
         List<User> allUser = getAllUsers();
         assertThat(allUser).isEmpty();
-
     }
 
     @Test
@@ -153,14 +150,13 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                 }
                 """.formatted(
                 USER_NAME,
-
                 USER_LAST_NAME,
                 USER_BIRTHDATE,
                 USER_EMAIL);
 
         mockMvc.perform(post("/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(creationRequest))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(creationRequest))
                 .andDo(log())
                 .andExpect(status().isCreated());
 
@@ -171,7 +167,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         assertThat(user.getLastName()).isEqualTo(USER_LAST_NAME);
         assertThat(user.getBirthDate()).isEqualTo(LocalDate.parse(USER_BIRTHDATE));
         assertThat(user.getEmail()).isEqualTo(USER_EMAIL);
-
     }
 
     @Test
@@ -193,7 +188,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                 }
                 """.formatted(
                 USER_NAME,
-
                 USER_LAST_NAME,
                 USER_BIRTHDATE,
                 USER_EMAIL);

@@ -22,9 +22,10 @@ public abstract class IntegrationTestBase {
     private JpaRepository<Training, Long> trainingRepository;
 
     @AfterEach
-    void cleanUp() {
+    void cleanUpDB() {
         cleanDatabase();
-
+        trainingRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     private void cleanDatabase() {
@@ -34,9 +35,9 @@ public abstract class IntegrationTestBase {
 
     @BeforeEach
     public void setUp() {
-
         cleanDatabase();
-
+        trainingRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     protected Training persistTraining(Training training) {
@@ -44,7 +45,6 @@ public abstract class IntegrationTestBase {
     }
 
     protected User existingUser(User user) {
-
         return userRepository.save(user);
     }
 
