@@ -22,10 +22,8 @@ public abstract class IntegrationTestBase {
     private JpaRepository<Training, Long> trainingRepository;
 
     @AfterEach
-    void cleanUpDB() {
+    void cleanUp() {
         cleanDatabase();
-        trainingRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     private void cleanDatabase() {
@@ -36,8 +34,7 @@ public abstract class IntegrationTestBase {
     @BeforeEach
     public void setUp() {
         cleanDatabase();
-        trainingRepository.deleteAll();
-        userRepository.deleteAll();
+
     }
 
     protected Training persistTraining(Training training) {

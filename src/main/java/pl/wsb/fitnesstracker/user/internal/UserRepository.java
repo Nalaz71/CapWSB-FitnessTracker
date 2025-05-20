@@ -1,8 +1,6 @@
 package pl.wsb.fitnesstracker.user.internal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserSearch;
@@ -17,11 +15,36 @@ import java.util.stream.Collectors;
 @Repository
 interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT u FROM User u WHERE LOWER(u.email) = LOWER(:email)")
-    Optional<User> findByEmailIgnoreCase(String email);
+    /**
+     * Query searching users by email address. It matches by exact match.
+     *
+     * @param email email of the user to search
+     * @return {@link Optional} containing found user or {@link Optional#empty()} if none matched
+     */
+    default Optional<User> findByEmail(String email) {
+        return findAll().stream()
+                .filter(user -> Objects.equals(user.getEmail().toLowerCase(), email.toLowerCase()))
+                .findFirst();
+    }
 
-    Optional<User> findById(Long id);
+    /**
+     * Query searching users by id. It matches by exact match.
+     *
+     * @param id id of the user to search
+     * @return {@link Optional} containing found user or {@link Optional#empty()} if none matched
+     */
+    default Optional<User> findById(Long id) {
+        return findAll().stream()
+                .filter(user -> (Objects.equals(user.getId(), id)))
+                .findFirst();
+    }
 
+    /**
+     * Query searching users by search criteria. It matches by exact match.
+     *
+     * @param search search criteria
+     * @return {@link List} containing found users or empty list if none matched
+     */
     default List<User> findMatchingUser(UserSearch search) {
         return findAll().stream()
                 .filter(user ->
@@ -29,24 +52,27 @@ interface UserRepository extends JpaRepository<User, Long> {
                 || Objects.equals(user.getFirstName(), search.getFirstName())) &&
                 (search.getLastName() == null
                 || Objects.equals(user.getLastName(), search.getLastName())) &&
-                (search.getBirthDate() == null
-                || user.getBirthDate().isEqual(search.getBirthDate())) &&
+                (search.getBirthdate() == null
+                || user.getBirthdate().isEqual(search.getBirthdate())) &&
                 (search.getEmail() == null
                 || Objects.equals(user.getEmail(), search.getEmail()))
                 )
                 .collect(Collectors.toList());
     }
 
-//    @Query("SELECT u FROM User u WHERE " +
-//            "(:firstName IS NULL OR u.firstName = :firstName) AND " +
-//            "(:lastName IS NULL OR u.lastName = :lastName) AND " +
-//            "(:birthDate IS NULL OR u.birthDate = :birthDate) AND " +
-//            "(:email IS NULL OR u.email = :email)")
-//    List<User> findMatchingUser(@Param("firstName") String firstName,
-//                                 @Param("lastName") String lastName,
-//                                 @Param("birthDate") LocalDate birthDate,
-//                                 @Param("email") String email);
-
+    /**
+     * Query searching users by email address. It matches by partial match.
+     *
+     * @param partialEmail partial email of the user to search
+     * @return {@link List} containing found users or empty list if none matched
+     */
     List<User> findAllByEmailContainingIgnoreCase(String partialEmail);
-    List<User> findByBirthDateBefore(LocalDate date);
+
+    /**
+     * Query searching users by birthdate. It matches by date before the given date.
+     *
+     * @param date date to search
+     * @return {@link List} containing found users or empty list if none matched
+     */
+    List<User> findByBirthdateBefore(LocalDate date);
 }

@@ -27,7 +27,7 @@ public class User {
     private String lastName;
 
     @Column(name = "birthdate", nullable = false)
-    private LocalDate birthDate;
+    private LocalDate birthdate;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -35,12 +35,12 @@ public class User {
     public User(
             final String firstName,
             final String lastName,
-            final LocalDate birthDate,
+            final LocalDate birthdate,
             final String email) {
 
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.birthdate = birthdate;
         this.email = email;
     }
 
@@ -48,12 +48,12 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(birthDate, user.birthDate) && Objects.equals(email, user.email);
+        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(birthdate, user.birthdate) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate, email);
+        return Objects.hash(firstName, lastName, birthdate, email);
     }
 
 }

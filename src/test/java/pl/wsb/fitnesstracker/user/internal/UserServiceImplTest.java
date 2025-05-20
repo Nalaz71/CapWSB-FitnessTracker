@@ -8,20 +8,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserSearch;
-import pl.wsb.fitnesstracker.user.exception.UserNotFoundException;
+import pl.wsb.fitnesstracker.user.api.UserNotFoundException;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -66,7 +61,6 @@ public class UserServiceImplTest {
         User user = new User("!@#$%%", "Stone", LocalDate.of(1990, 1, 1), "emma.stone@hollywood.ca");
 
         //when
-
         //then
         Throwable thrown = assertThrows(IllegalArgumentException.class,
                 () -> {
@@ -110,7 +104,7 @@ public class UserServiceImplTest {
         String email = "john.doe@example.com";
         User user = new User("John", "Doe", LocalDate.of(1985, 5, 15), email);
         user.setId(1L);
-        when(mockUserRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(user));
+        when(mockUserRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         // when
         Optional<User> result = userService.getUserByEmail(email);
@@ -124,7 +118,7 @@ public class UserServiceImplTest {
     void getUserByEmailShouldReturnEmptyWhenUserDoesNotExist() {
         // given
         String email = "john.doe@example.com";
-        when(mockUserRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.empty());
+        when(mockUserRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         // when
         Optional<User> result = userService.getUserByEmail(email);
@@ -219,7 +213,7 @@ public class UserServiceImplTest {
         String validEmail = "john.doe@example.com";
         User user = new User("John", "Doe", LocalDate.of(1985, 5, 15), validEmail);
         user.setId(1L);
-        when(mockUserRepository.findByEmailIgnoreCase(validEmail)).thenReturn(Optional.of(user));
+        when(mockUserRepository.findByEmail(validEmail)).thenReturn(Optional.of(user));
 
         // when
         Optional<User> result = userService.getUserDetailsByEmail(validEmail);
@@ -232,7 +226,7 @@ public class UserServiceImplTest {
     void getUserDetailsByEmailShouldReturnEmptyWhenUserDoesNotExist() {
         // given
         String validEmail = "nonexistent@example.com";
-        when(mockUserRepository.findByEmailIgnoreCase(validEmail)).thenReturn(Optional.empty());
+        when(mockUserRepository.findByEmail(validEmail)).thenReturn(Optional.empty());
 
         // when
         Optional<User> result = userService.getUserDetailsByEmail(validEmail);
@@ -308,7 +302,7 @@ public class UserServiceImplTest {
     @Test
     void findMatchingUsersShouldReturnMatchingUsersWhenUsersExist() {
         // given
-        UserSearch validSearch = new UserSearch("John", "Doe", "john.doe@example.com", LocalDate.of(1985, 5, 15));
+        UserSearch validSearch = new UserSearch("John", "Doe", LocalDate.of(1985, 5, 15), "john.doe@example.com");
         User user = new User("John", "Doe", LocalDate.of(1985, 5, 15), "john.doe@example.com");
         user.setId(1L);
 
@@ -326,7 +320,7 @@ public class UserServiceImplTest {
     @Test
     void findMatchingUsersShouldReturnEmptyListWhenNoUsersMatch() {
         // given
-        UserSearch validSearch = new UserSearch("Nonexistent", "User", "nonexistent@example.com", LocalDate.of(1990, 1, 1));
+        UserSearch validSearch = new UserSearch("Nonexistent", "User", LocalDate.of(1990, 1, 1), "nonexistent@example.com");
         when(mockUserRepository.findMatchingUser(validSearch)).thenReturn(Collections.emptyList());
 
         // when
@@ -394,7 +388,7 @@ public class UserServiceImplTest {
         LocalDate date = LocalDate.of(2000, 1, 1);
         User user = new User("John", "Doe", LocalDate.of(1990, 5, 15), "john.doe@example.com");
         user.setId(1L);
-        when(mockUserRepository.findByBirthDateBefore(date)).thenReturn(List.of(user));
+        when(mockUserRepository.findByBirthdateBefore(date)).thenReturn(List.of(user));
 
         // when
         List<User> result = userService.findUsersOlderThan(date);
@@ -402,21 +396,21 @@ public class UserServiceImplTest {
         // then
         assertEquals(1, result.size());
         assertEquals(user, result.get(0));
-        verify(mockUserRepository, times(1)).findByBirthDateBefore(date);
+        verify(mockUserRepository, times(1)).findByBirthdateBefore(date);
     }
 
     @Test
     void findUsersOlderThanShouldReturnEmptyListWhenNoUsersMatch() {
         // given
         LocalDate date = LocalDate.of(2000, 1, 1);
-        when(mockUserRepository.findByBirthDateBefore(date)).thenReturn(Collections.emptyList());
+        when(mockUserRepository.findByBirthdateBefore(date)).thenReturn(Collections.emptyList());
 
         // when
         List<User> result = userService.findUsersOlderThan(date);
 
         // then
         assertTrue(result.isEmpty());
-        verify(mockUserRepository, times(1)).findByBirthDateBefore(date);
+        verify(mockUserRepository, times(1)).findByBirthdateBefore(date);
     }
 
     @Test
@@ -427,7 +421,7 @@ public class UserServiceImplTest {
         // when and then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.findUsersOlderThan(date));
         assertEquals("The date is required.", exception.getMessage());
-        verify(mockUserRepository, never()).findByBirthDateBefore(any());
+        verify(mockUserRepository, never()).findByBirthdateBefore(any());
     }
 
     @Test
@@ -436,7 +430,9 @@ public class UserServiceImplTest {
         Long userId = 1L;
         User existingUser = new User("John", "Doe", LocalDate.of(1985, 5, 15), "john.doe@example.com");
         existingUser.setId(userId);
+
         User userToUpdate = new User("Jonathan", "Smith", LocalDate.of(1985, 5, 15), "jon.smith@example.com");
+
         when(mockUserRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         when(mockUserRepository.save(existingUser)).thenReturn(existingUser);
 
@@ -468,11 +464,14 @@ public class UserServiceImplTest {
         Long userId = 1L;
         User existingUser = new User("John", "Doe", LocalDate.of(1985, 5, 15), "john.doe@example.com");
         existingUser.setId(userId);
+
         User invalidUserToUpdate = new User("Invalid@Name", null, null, null);
+
         when(mockUserRepository.findById(userId)).thenReturn(Optional.of(existingUser));
 
         // when and then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.updateUser(userId, invalidUserToUpdate));
         assertEquals("Invalid first name format: Invalid@Name", exception.getMessage());
     }
+
 }

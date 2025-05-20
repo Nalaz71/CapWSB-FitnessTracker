@@ -11,8 +11,8 @@ public class UserSearch {
 
     private String firstName;
     private String lastName;
+    private LocalDate birthdate;
     private String email;
-    private LocalDate birthDate;
 
 }
 

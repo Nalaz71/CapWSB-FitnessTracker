@@ -2,6 +2,6 @@ package pl.wsb.fitnesstracker.user.internal;
 
 import jakarta.annotation.Nullable;
 
-record UserSimpleDto(@Nullable Long Id, String firstName, String lastName) {
+record UserSimpleDto(@Nullable Long id, String firstName, String lastName) {
 }
 
