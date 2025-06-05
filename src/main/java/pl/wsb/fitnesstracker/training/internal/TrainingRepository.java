@@ -10,7 +10,7 @@ import java.util.List;
  * Repository interface for managing Training entities.
  * This interface extends JpaRepository to provide CRUD operations for Training entities.
  */
-interface TrainingRepository extends JpaRepository<Training, Long> {
+public interface TrainingRepository extends JpaRepository<Training, Long> {
 
         /**
          * Finds all Training entities associated with a specific user ID.
