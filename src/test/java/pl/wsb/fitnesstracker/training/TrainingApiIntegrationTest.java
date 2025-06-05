@@ -122,7 +122,7 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
 
         User user1 = existingUser(generateClient());
         Training training1 = persistTraining(generateTrainingWithDetails(user1, "2024-05-19 19:00:00", "2024-05-19 20:30:00", ActivityType.RUNNING, 14, 11.5));
-        persistTraining(generateTrainingWithDetails(user1, "2024-05-17 19:00:00", "2024-05-17 20:30:00", ActivityType.RUNNING, 14, 11.5));
+        Training training2 = (generateTrainingWithDetails(user1, "2024-05-17 19:00:00", "2024-05-17 20:30:00", ActivityType.RUNNING, 14, 11.5));
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
@@ -145,7 +145,7 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
     void getAllTrainingByActivityType_whenGettingAllTrainingByActivityType() throws Exception {
 
         User user1 = existingUser(generateClient());
-        persistTraining(generateTrainingWithActivityType(user1, ActivityType.RUNNING));
+        Training training1 = persistTraining(generateTrainingWithActivityType(user1, ActivityType.RUNNING));
         Training training2 = persistTraining(generateTrainingWithActivityType(user1, ActivityType.TENNIS));
         Training training3 = persistTraining(generateTrainingWithActivityType(user1, ActivityType.TENNIS));
 

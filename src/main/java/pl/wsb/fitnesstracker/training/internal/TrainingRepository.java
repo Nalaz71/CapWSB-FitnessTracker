@@ -10,7 +10,7 @@ interface TrainingRepository extends JpaRepository<Training, Long> {
 
         List<Training> findByUserId(Long userId);
 
-        List<Training> findByEndTimeBefore(Date date);
+        List<Training> findByEndTimeAfter(Date endTime);
 
         List<Training> findByActivityType(ActivityType activityType);
     }
