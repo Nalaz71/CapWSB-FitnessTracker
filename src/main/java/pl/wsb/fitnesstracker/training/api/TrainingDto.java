@@ -6,6 +6,10 @@ import pl.wsb.fitnesstracker.user.api.User;
 
 import java.util.Date;
 
+/**
+ * Data Transfer Object for Training.
+ * This class is used to transfer training data between layers.
+ */
 @Getter
 @Setter
 @ToString

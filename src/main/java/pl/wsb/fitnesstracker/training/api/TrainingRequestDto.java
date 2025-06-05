@@ -5,6 +5,10 @@ import pl.wsb.fitnesstracker.training.internal.ActivityType;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data Transfer Object for Training Request.
+ * This class is used to transfer training request data between layers.
+ */
 @Data
 public class TrainingRequestDto {
 
